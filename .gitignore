@@ -1,0 +1,8 @@
+.idea
+.vscode
+trader/orders.json
+node_modules
+!node_modules\ccxt-compiled\lib\bit2c.js
+package-lock.json
+config/secrets
+config/undefined.json
