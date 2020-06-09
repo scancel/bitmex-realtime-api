@@ -6,7 +6,7 @@ const debug = require('debug')('BitMEX:realtime-api');
 const createSocket = require('./lib/createSocket');
 const deltaParser = require('./lib/deltaParser');
 const getStreams = require('./lib/getStreams');
-
+const emitersPerKey = {};
 const DEFAULT_MAX_TABLE_LEN = 10000;
 
 const endpoints = {
@@ -31,6 +31,9 @@ const noSymbolTables = BitMEXClient.noSymbolTables = [
 module.exports = BitMEXClient;
 
 function BitMEXClient(options) {
+  if(options && options.apiKeyID && emitersPerKey[options.apiKeyID]){
+    return emitersPerKey[options.apiKeyID];
+  }
   const emitter = this;
   // We inherit from EventEmitter2, which supports wildcards.
   EventEmitter.call(emitter, {
@@ -64,6 +67,9 @@ function BitMEXClient(options) {
     emitter.streams = streams;
     emitter.emit('initialize');
   });
+  if(options.apiKeyID){
+      emitersPerKey[options.apiKeyID] = this;
+  }
 }
 util.inherits(BitMEXClient, EventEmitter);
 
